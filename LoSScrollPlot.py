@@ -22,8 +22,9 @@ def unc_plot(x,data,color='r',apply_smooth=True, label=None, legend=True):
     if legend:
         plt.legend()
 
-output = np.load('outputScroll.npy', allow_pickle=True)
+output = np.load('CorrectSimBoundOutput.npy', allow_pickle=True)
 output = output[()]
+output = BA.postproc_structure(output)
 #output = BA.rates_extrap_adas_structure(output, low_te=False)
 #output = BA.rates_extrap_mol_structure(output)
 #np.save('SimulatedNewPECPost.npy', output)
@@ -57,9 +58,9 @@ def get_SOLPS_output(output,indx):
 def update_LoS_plot(indx_d):
     plt.sca(ax)
     plt.cla()
-    unc_plot(L_c, np.transpose(np.nanquantile(ioni[:, indx_d[0], :], [0.16, 0.5, 0.84], axis=1)), color='r', label='Ionisation')
-    unc_plot(L_c, np.transpose(np.nanquantile(mar[:, indx_d[0], :], [0.16, 0.5, 0.84], axis=1)), color='g', label='MAR')
-    unc_plot(L_c, np.transpose(np.nanquantile(output['ResultMC']['EIR'][:, indx_d[0], :], [0.16, 0.5, 0.84], axis=1)), color='b', label='EIR')
+    unc_plot(L_c, np.transpose(np.quantile(ioni[:, indx_d[0], :], [0.16, 0.5, 0.84], axis=1)), color='r', label='Ionisation')
+    unc_plot(L_c, np.transpose(np.quantile(mar[:, indx_d[0], :], [0.16, 0.5, 0.84], axis=1)), color='g', label='MAR')
+    unc_plot(L_c, np.transpose(np.quantile(output['ResultMC']['EIR'][:, indx_d[0], :], [0.16, 0.5, 0.84], axis=1)), color='b', label='EIR')
     # get solps
     ion_s, mar_s, eir_s = get_SOLPS_output(output,indx_d[0])
     plt.plot(L_c,ion_s,'r--',label='Ionisation SOLPS',linewidth=2)
